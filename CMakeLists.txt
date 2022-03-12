@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/Rainbow.cpp src/Rainbow.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/Rainbow.cpp src/Rainbow.h src/Global.cpp src/Global.h)

@@ -17,16 +17,16 @@ Color Rainbow::getSectionColor(unsigned int section, unsigned int posInSection) 
     unsigned int color_fade = Rainbow::fade_color[section];
     unsigned int value_fade;
 
-    if(posInSection < RAINBOW_WIDTH_SOLO) {
+    if (posInSection < RAINBOW_WIDTH_SOLO) {
         value_fade = 255 * !Rainbow::fade_upwards[section];
     }
     else {
         unsigned int posInFade = posInSection - RAINBOW_WIDTH_SOLO;
-        if(Rainbow::fade_upwards[section]) {
-            value_fade = posInFade;
+        if (Rainbow::fade_upwards[section]) {
+            value_fade = posInFade * 256 / RAINBOW_WIDTH_FADE;
         }
         else {
-            value_fade = 255 - posInFade;
+            value_fade = (RAINBOW_WIDTH_FADE - posInFade) * 256 / RAINBOW_WIDTH_FADE;
         }
     }
     colors[color_fade] = value_fade;

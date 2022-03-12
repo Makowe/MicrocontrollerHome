@@ -4,6 +4,7 @@
 
 #include "LedInterface.h"
 extern unsigned int GLOBAL_BRIGHTNESS;
+extern unsigned int pulse_fade;
 
 LedInterface::LedInterface() {
     _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT, NEO_GRB + NEO_KHZ800);
@@ -13,16 +14,28 @@ LedInterface::LedInterface() {
 void LedInterface::setColor(unsigned int number, unsigned int red,
                             unsigned int green, unsigned int blue) {
 
-    unsigned int redMod = red  * CORRECTION_RED * GLOBAL_BRIGHTNESS
-                            / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
-    unsigned int greenMod = green  * CORRECTION_GREEN * GLOBAL_BRIGHTNESS
-                            / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
-    unsigned int blueMod = blue  * CORRECTION_BLUE * GLOBAL_BRIGHTNESS
-                            / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
+    unsigned long redMod = red * CORRECTION_RED * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
+    unsigned long greenMod = green * CORRECTION_GREEN * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
+    unsigned long blueMod = blue * CORRECTION_BLUE * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
+
+    if (redMod > pulse_fade) { redMod -= pulse_fade; }
+    else if (redMod < pulse_fade and redMod != 0) {
+        redMod = 1;
+    }
+
+    if (greenMod > pulse_fade) { greenMod -= pulse_fade; }
+    else if (greenMod < pulse_fade and greenMod != 0) {
+        redMod = 1;
+    }
+
+    if (blueMod > pulse_fade) { blueMod -= pulse_fade; }
+    else if (blueMod < pulse_fade and blueMod != 0) {
+        redMod = 1;
+    }
 
     _pixels.setPixelColor(number, redMod, greenMod, blueMod);
 
-    if(number == 0 and DO_PRINT) {
+    if (number == 0 and DO_PRINT) {
         Serial.print("red: ");
         Serial.print(red);
         Serial.print(" ");

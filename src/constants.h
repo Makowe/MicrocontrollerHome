@@ -3,6 +3,8 @@
 #ifndef TEST3_CONSTANTS_H
 #define TEST3_CONSTANTS_H
 
+#include "Global.h"
+
 //debug
 #define DO_PRINT 1
 
@@ -18,7 +20,7 @@
 
 #define CORRECTION_RED 16
 #define CORRECTION_GREEN 10
-#define CORRECTION_BLUE 5
+#define CORRECTION_BLUE 6
 
 #define RED 0
 #define GREEN 1
@@ -28,11 +30,16 @@
 #define CORRECTION_MAX 16
 
 //rainbow
-#define RAINBOW_WIDTH_SOLO 20
-#define RAINBOW_WIDTH_FADE 256
-#define RAINBOW_WIDTH_SECTION RAINBOW_WIDTH_SOLO + RAINBOW_WIDTH_FADE
+#define RAINBOW_WIDTH_FADE Global::rainbow_fade_width
+#define RAINBOW_WIDTH_SOLO (256 - RAINBOW_WIDTH_FADE)
+#define RAINBOW_WIDTH_SECTION 256
 #define RAINBOW_SECTIONS 6
-#define RAINBOW_LENGTH RAINBOW_WIDTH_SECTION * RAINBOW_SECTIONS
+#define RAINBOW_LENGTH (RAINBOW_WIDTH_SECTION * RAINBOW_SECTIONS)
+
+// pulsating
+#define PULSE_MAX 5
+#define PULSE_MIN 0
+#define PULSE_NUM_PERIODS 32
 
 struct Color {
 
@@ -53,4 +60,4 @@ struct Color {
     unsigned int _blue;
 };
 
-#endif //TEST3_CONSTANTS_H
+#endif//TEST3_CONSTANTS_H

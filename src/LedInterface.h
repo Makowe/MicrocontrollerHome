@@ -6,15 +6,14 @@
 #ifndef TEST3_LEDINTERFACE_H
 #define TEST3_LEDINTERFACE_H
 
-#include <Adafruit_NeoPixel.h>
 #include "constants.h"
+#include <Adafruit_NeoPixel.h>
 
 /*
  * wrapper class for AdaFruit NeonPixel object with additional methods.
  */
 class LedInterface {
 public:
-
     LedInterface();
 
     void setColor(unsigned int number, unsigned int red, unsigned int green, unsigned int blue);
@@ -28,4 +27,4 @@ private:
 };
 
 
-#endif //TEST3_LEDINTERFACE_H
+#endif//TEST3_LEDINTERFACE_H
