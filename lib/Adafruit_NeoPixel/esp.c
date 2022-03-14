@@ -130,7 +130,7 @@ void espShow(uint8_t pin, uint8_t *pixels, uint32_t numBytes, boolean is800KHz) 
         counter_clk_hz = APB_CLK_FREQ / (div);
     }
 
-    // NS to tick converter
+    // NS to position converter
     float ratio = (float)counter_clk_hz / 1e9;
 
     if (is800KHz) {

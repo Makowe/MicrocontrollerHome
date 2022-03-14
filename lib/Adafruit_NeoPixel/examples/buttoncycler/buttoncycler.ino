@@ -117,7 +117,7 @@ void theaterChase(uint32_t color, int wait) {
   }
 }
 
-// Rainbow cycle along whole strip. Pass delay time (in ms) between frames.
+// ThemeRainbow cycle along whole strip. Pass delay time (in ms) between frames.
 void rainbow(int wait) {
   // Hue of first pixel runs 3 complete loops through the color wheel.
   // Color wheel has a range of 65536 but it's OK if we roll over, so
@@ -141,7 +141,7 @@ void rainbow(int wait) {
   }
 }
 
-// Rainbow-enhanced theater marquee. Pass delay time (in ms) between frames.
+// ThemeRainbow-enhanced theater marquee. Pass delay time (in ms) between frames.
 void theaterChaseRainbow(int wait) {
   int firstPixelHue = 0;     // First pixel starts at red (hue 0)
   for(int a=0; a<30; a++) {  // Repeat 30 times...

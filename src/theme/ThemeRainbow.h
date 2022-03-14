@@ -2,15 +2,24 @@
 // Created by nicom on 14.07.2021.
 //
 
-#ifndef TEST3_RAINBOW_H
-#define TEST3_RAINBOW_H
+#ifndef TEST3_THEMERAINBOW_H
+#define TEST3_THEMERAINBOW_H
 
+#include "Theme.h"
 #include "constants.h"
 
-class Rainbow {
+class ThemeRainbow : public Theme {
 public:
+    ThemeRainbow(unsigned int speed, unsigned int compress);
+    Color calcTheme(unsigned int rainbow_position) override;
+    void nextTick() override;
+
+private:
     static Color getSectionColor(unsigned int section, unsigned int posInSection);
-    static Color calcRainbowColor(unsigned int position);
+
+    unsigned int position = 0;
+    unsigned int speed;
+    unsigned int compress;
 
     constexpr static unsigned int high_color[6] = {
             RED, GREEN, GREEN, BLUE, BLUE, RED};
@@ -20,4 +29,4 @@ public:
             true, false, true, false, true, false};
 };
 
-#endif// TEST3_RAINBOW_H
+#endif// TEST3_THEMERAINBOW_H

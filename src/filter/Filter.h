@@ -1,0 +1,16 @@
+//
+// Created by nicom on 14.03.2022.
+//
+
+#ifndef TEST3_FILTER_H
+#define TEST3_FILTER_H
+
+#include "constants.h"
+
+class Filter {
+    virtual Color calcFilter(unsigned int pixel_idx, Color color_without_filter) = 0;
+    virtual void nextTick() = 0;
+};
+
+
+#endif//TEST3_FILTER_H

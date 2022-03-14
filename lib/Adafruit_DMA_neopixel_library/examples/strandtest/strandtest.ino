@@ -56,7 +56,7 @@ void loop() {
     }
   }
 
-  // Rainbow cycle
+  // ThemeRainbow cycle
   uint32_t elapsed, t, startTime = micros();
   for(;;) {
     t       = micros();

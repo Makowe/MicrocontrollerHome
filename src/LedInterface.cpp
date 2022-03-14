@@ -18,21 +18,6 @@ void LedInterface::setColor(unsigned int number, unsigned int red,
     unsigned long greenMod = green * CORRECTION_GREEN * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
     unsigned long blueMod = blue * CORRECTION_BLUE * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
 
-    if (redMod > pulse_fade) { redMod -= pulse_fade; }
-    else if (redMod < pulse_fade and redMod != 0) {
-        redMod = 1;
-    }
-
-    if (greenMod > pulse_fade) { greenMod -= pulse_fade; }
-    else if (greenMod < pulse_fade and greenMod != 0) {
-        redMod = 1;
-    }
-
-    if (blueMod > pulse_fade) { blueMod -= pulse_fade; }
-    else if (blueMod < pulse_fade and blueMod != 0) {
-        redMod = 1;
-    }
-
     _pixels.setPixelColor(number, redMod, greenMod, blueMod);
 
     if (number == 0 and DO_PRINT) {
