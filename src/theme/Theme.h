@@ -6,6 +6,7 @@
 #define TEST3_THEME_H
 
 #include "constants.h"
+#include <Color.h>
 
 
 class Theme {

@@ -4,7 +4,6 @@
 
 #include "LedInterface.h"
 extern unsigned int GLOBAL_BRIGHTNESS;
-extern unsigned int pulse_fade;
 
 LedInterface::LedInterface() {
     _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT, NEO_GRB + NEO_KHZ800);
@@ -37,7 +36,7 @@ void LedInterface::setColor(unsigned int number, unsigned int red,
 }
 
 void LedInterface::setColor(unsigned int number, Color color) {
-    setColor(number, color._red, color._green, color._blue);
+    setColor(number, color.red, color.green, color.blue);
 }
 
 void LedInterface::begin() {

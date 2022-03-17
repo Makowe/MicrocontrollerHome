@@ -6,9 +6,11 @@
 #define TEST3_FILTER_H
 
 #include "constants.h"
+#include <Color.h>
 
 class Filter {
-    virtual Color calcFilter(unsigned int pixel_idx, Color color_without_filter) = 0;
+public:
+    virtual Color applyFilter(unsigned int pixel_idx, Color color) = 0;
     virtual void nextTick() = 0;
 };
 

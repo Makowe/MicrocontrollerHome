@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/theme/ThemeRainbow.cpp src/theme/ThemeRainbow.h src/Global.cpp src/Global.h src/filter/PulsateFilter.cpp src/filter/PulsateFilter.h src/theme/Theme.cpp src/theme/Theme.h src/filter/Filter.cpp src/filter/Filter.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/theme/ThemeRainbow.cpp src/theme/ThemeRainbow.h src/Global.cpp src/Global.h src/filter/FilterPulsate.cpp src/filter/FilterPulsate.h src/theme/Theme.cpp src/theme/Theme.h src/filter/Filter.cpp src/filter/Filter.h src/Color.cpp src/Color.h)

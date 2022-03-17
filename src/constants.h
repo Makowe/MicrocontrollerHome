@@ -6,7 +6,7 @@
 #include "Global.h"
 
 //debug
-#define DO_PRINT 1
+#define DO_PRINT 0
 
 
 // pins
@@ -36,32 +36,14 @@
 #define RAINBOW_SECTIONS 6
 #define RAINBOW_LENGTH (RAINBOW_WIDTH_SECTION * RAINBOW_SECTIONS)
 
-#define DEFAULT_RAINBOW_SPEED 4
-#define DEFAULT_RAINBOW_COMPRESS 4
+#define RAINBOW_DEFAULT_SPEED 2
+#define RAINBOW_DEFAULT_COMPRESS 4
 
 // pulsating
 #define PULSATE_LENGTH 100
-#define PULSATE_LEVELS 16
-#define PULSE_MAX 16
-#define PULSE_MIN 8
+#define PULSATE_MAX 255
+#define PULSATE_MIN 64
 
-struct Color {
-
-    Color(unsigned int red, unsigned int green, unsigned int blue) {
-        _red = red;
-        _green = green;
-        _blue = blue;
-    }
-
-    explicit Color(unsigned int colors[3]) {
-        _red = colors[0];
-        _green = colors[1];
-        _blue = colors[2];
-    }
-
-    unsigned int _red;
-    unsigned int _green;
-    unsigned int _blue;
-};
+#define PULSATE_DEFAULT_SPEED 2
 
 #endif//TEST3_CONSTANTS_H

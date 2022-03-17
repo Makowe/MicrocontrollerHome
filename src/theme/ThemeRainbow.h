@@ -7,6 +7,7 @@
 
 #include "Theme.h"
 #include "constants.h"
+#include <Color.h>
 
 class ThemeRainbow : public Theme {
 public:
