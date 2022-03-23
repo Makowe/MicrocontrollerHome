@@ -1,8 +1,9 @@
 #include "LedInterface.h"
-#include "constants.h"
 #include "theme/ThemeRainbow.h"
 #include <Arduino.h>
 #include <filter/FilterPulsate.h>
+#include <IRremote.h>
+
 
 LedInterface led;
 
@@ -17,7 +18,7 @@ Theme* theme = &rainbowTheme;
 FilterPulsate filterPulsate = FilterPulsate(PULSATE_DEFAULT_SPEED);
 Filter* filter = &filterPulsate;
 
-unsigned int GLOBAL_BRIGHTNESS = 5;
+unsigned int GLOBAL_BRIGHTNESS = 3;
 
 
 void update_leds() {
