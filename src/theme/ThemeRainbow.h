@@ -14,6 +14,9 @@ public:
     ThemeRainbow(unsigned int speed, unsigned int compress);
     Color calcTheme(unsigned int rainbow_position) override;
     void nextTick() override;
+    static unsigned int getBaseBefore(unsigned int color, unsigned int section);
+    static unsigned int getBaseAfter(unsigned int color, unsigned int section);
+    static unsigned int interpolate(unsigned int valueLeft, unsigned int valueRight, unsigned int position, unsigned int maxPosition);
 
 private:
     static Color getSectionColor(unsigned int section, unsigned int posInSection);
@@ -22,12 +25,11 @@ private:
     unsigned int speed;
     unsigned int compress;
 
-    constexpr static unsigned int high_color[6] = {
-            RED, GREEN, GREEN, BLUE, BLUE, RED};
-    constexpr static unsigned int fade_color[6] = {
-            GREEN, RED, BLUE, GREEN, RED, BLUE};
-    constexpr static bool fade_upwards[6] = {
-            true, false, true, false, true, false};
+    constexpr static unsigned int base_values[3][6] = {
+            {255, 255, 0, 0, 0, 255},
+            {0, 255, 255, 255, 0, 0},
+            {0, 0, 0, 255, 255, 255}
+    };
 };
 
 #endif// TEST3_THEMERAINBOW_H

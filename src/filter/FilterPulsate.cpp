@@ -11,10 +11,6 @@ Color FilterPulsate::applyFilter(unsigned int pixel_idx, Color color) {
 
     unsigned int brightness = interpolate(section, positionInSection);
 
-    if(pixel_idx == NUM_PIXELS-1) {
-        Serial.println(brightness);
-    }
-
     return color.ModifyBrightness(brightness, PULSATE_MAX);
 }
 
@@ -59,14 +55,17 @@ void FilterPulsate::calc_next_level() {
         levels[i] = levels[i+1];
     }
     levels[PULSATE_ARRAY_SIZE-1] = new_level;
-    Serial.print(levels[0]);
-    Serial.print(' ');
-    Serial.print(levels[1]);
-    Serial.print(' ');
-    Serial.print(levels[2]);
-    Serial.print(' ');
-    Serial.print(levels[3]);
-    Serial.println(' ');
+    if(DO_PRINT) {
+        Serial.print("[FILT PULS]:\t");
+        Serial.print(levels[0]);
+        Serial.print(' ');
+        Serial.print(levels[1]);
+        Serial.print(' ');
+        Serial.print(levels[2]);
+        Serial.print(' ');
+        Serial.print(levels[3]);
+        Serial.println(' ');
+    }
 }
 
 void FilterPulsate::init_levels() {

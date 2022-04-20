@@ -3,10 +3,11 @@
 #include <Arduino.h>
 #include <filter/FilterPulsate.h>
 #include <IRremote.h>
-
+#include <TinyIRReceiver.hpp>
 
 LedInterface led;
-
+volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
+int loop_iteration = 0;
 
 //
 // GLOBALS
@@ -34,10 +35,46 @@ void update_leds() {
 
 void setup() {
     Serial.begin(9600);
+    initPCIInterruptForTinyReceiver();
 }
 
+
+
 void loop() {
+    GLOBAL_BRIGHTNESS = analogRead(A0) / (1024 / NUM_BRIGHTNESS_LEVELS);
+    if (sCallbackData.justWritten)
+    {
+        sCallbackData.justWritten = false;
+        Serial.print("Address=0x");
+        Serial.print(sCallbackData.Address, HEX);
+        Serial.print(" Command=0x");
+        Serial.print(sCallbackData.Command, HEX);
+        if (sCallbackData.isRepeat)
+        {
+            Serial.print(" Repeat");
+        }
+        Serial.println();
+    }
+
     update_leds();
     led.show();
     delay(50);
+    /*
+    if(loop_iteration >= 9) {
+        loop_iteration = 0;
+    }
+    else {
+        loop_iteration += 1;
+    }
+    */
+}
+
+void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
+{
+    if(!isRepeat) {
+        sCallbackData.Address = aAddress;
+        sCallbackData.Command = aCommand;
+        sCallbackData.isRepeat = isRepeat;
+        sCallbackData.justWritten = true;
+    }
 }

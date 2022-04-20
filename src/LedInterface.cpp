@@ -6,7 +6,7 @@
 extern unsigned int GLOBAL_BRIGHTNESS;
 
 LedInterface::LedInterface() {
-    _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT, NEO_GRB + NEO_KHZ800);
+    _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT_PIN, NEO_GRB + NEO_KHZ800);
     this->begin();
 }
 
@@ -20,6 +20,7 @@ void LedInterface::setColor(unsigned int number, unsigned int red,
     _pixels.setPixelColor(number, redMod, greenMod, blueMod);
 
     if (number == 0 and DO_PRINT) {
+        Serial.print("[LED INTER]: ");
         Serial.print("red: ");
         Serial.print(red);
         Serial.print(" ");

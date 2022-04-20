@@ -6,9 +6,7 @@
 
 #include "ThemeRainbow.h"
 
-constexpr unsigned int ThemeRainbow::high_color[];
-constexpr unsigned int ThemeRainbow::fade_color[];
-constexpr bool ThemeRainbow::fade_upwards[];
+constexpr unsigned int ThemeRainbow::base_values[3][6];
 
 ThemeRainbow::ThemeRainbow(unsigned int speed, unsigned int compress) : speed(speed), compress(compress) {}
 
@@ -26,28 +24,45 @@ void ThemeRainbow::nextTick() {
 }
 
 Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSection) {
-    unsigned int colors[3] = {0, 0, 0};
+    unsigned int result_color[3] = {0, 0, 0};
+    for(int color = 0; color < 3; color++) {
+        unsigned int baseValueBefore = getBaseBefore(color, section);
+        unsigned int baseValueAfter = getBaseAfter(color, section);
 
-    unsigned int color_high = ThemeRainbow::high_color[section];
-    colors[color_high] = 255;
-
-    unsigned int color_fade = ThemeRainbow::fade_color[section];
-    unsigned int value_fade;
-
-    if (posInSection < RAINBOW_WIDTH_SOLO) {
-        value_fade = 255 * !ThemeRainbow::fade_upwards[section];
-    }
-    else {
-        unsigned int posInFade = posInSection - RAINBOW_WIDTH_SOLO;
-        if (ThemeRainbow::fade_upwards[section]) {
-            value_fade = posInFade * 256 / RAINBOW_WIDTH_FADE;
+        if(posInSection < RAINBOW_WIDTH_SOLO) {
+            result_color[color] = baseValueBefore;
         }
         else {
-            value_fade = (RAINBOW_WIDTH_FADE - posInFade -1) * 256 / RAINBOW_WIDTH_FADE;
+            result_color[color] = interpolate(baseValueBefore, baseValueAfter,
+                                              posInSection-RAINBOW_WIDTH_SOLO, RAINBOW_WIDTH_FADE);
         }
     }
-    colors[color_fade] = value_fade;
-
-    return Color(colors);
+    return Color(result_color);
 }
+
+unsigned int ThemeRainbow::getBaseBefore(unsigned int color, unsigned int section) {
+    return base_values[color][section];
+}
+
+unsigned int ThemeRainbow::getBaseAfter(unsigned int color, unsigned int section) {
+    if(section + 1 < sizeof(base_values)) {
+        return base_values[color][section+1];
+    }
+    else {
+        return base_values[color][0];
+    }
+}
+unsigned int ThemeRainbow::interpolate(unsigned int valueLeft, unsigned int valueRight, unsigned int position, unsigned int maxPosition) {
+    if(valueLeft == valueRight) {
+        return valueLeft;
+    }
+    else if(valueLeft < valueRight){
+        return position * (valueRight - valueLeft) / maxPosition + valueLeft;
+    }
+    else {
+        return (maxPosition - position) * (valueLeft - valueRight) / maxPosition + valueRight;
+    }
+}
+
+
 #pragma clang diagnostic pop

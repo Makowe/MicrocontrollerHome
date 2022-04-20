@@ -10,12 +10,13 @@
 
 
 // pins
-#define LED_OUT 3
+#define LED_OUT_PIN 3
+#define IR_IN_PIN 2
 #define POTI_IN "A0"
 
 
 //constants
-#define NUM_PIXELS 196
+#define NUM_PIXELS 198
 #define NUM_BRIGHTNESS_LEVELS 16
 
 #define CORRECTION_RED 16
@@ -45,5 +46,7 @@
 #define PULSATE_MIN 32
 
 #define PULSATE_DEFAULT_SPEED 3
+
+#define IR_INPUT_PIN 2
 
 #endif//TEST3_CONSTANTS_H
