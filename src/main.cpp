@@ -5,6 +5,7 @@
 #include <IRremote.h>
 #include <TinyIRReceiver.hpp>
 
+
 LedInterface led;
 volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
 int loop_iteration = 0;
@@ -36,11 +37,26 @@ void update_leds() {
 void setup() {
     Serial.begin(9600);
     initPCIInterruptForTinyReceiver();
+
+    pinMode(BUTTON1_IN, INPUT_PULLUP);
+}
+
+bool buttonPressedOld = false;
+
+bool button1PressedNew() {
+    bool buttonPressed = !digitalRead(BUTTON1_IN);
+    bool result;
+    result = buttonPressed && !buttonPressedOld;
+    buttonPressedOld = buttonPressed;
+    return result;
 }
 
 
-
 void loop() {
+    if(button1PressedNew()) {
+        theme->nextSubTheme();
+    }
+
     GLOBAL_BRIGHTNESS = analogRead(A0) / (1024 / NUM_BRIGHTNESS_LEVELS);
     if (sCallbackData.justWritten)
     {
@@ -59,14 +75,7 @@ void loop() {
     update_leds();
     led.show();
     delay(50);
-    /*
-    if(loop_iteration >= 9) {
-        loop_iteration = 0;
-    }
-    else {
-        loop_iteration += 1;
-    }
-    */
+
 }
 
 void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)

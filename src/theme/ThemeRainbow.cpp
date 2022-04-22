@@ -6,7 +6,7 @@
 
 #include "ThemeRainbow.h"
 
-constexpr unsigned int ThemeRainbow::base_values[3][6];
+constexpr unsigned int ThemeRainbow::base_values[RAINBOW_SUB_THEMES][3][RAINBOW_SECTIONS];
 
 ThemeRainbow::ThemeRainbow(unsigned int speed, unsigned int compress) : speed(speed), compress(compress) {}
 
@@ -23,7 +23,7 @@ void ThemeRainbow::nextTick() {
     this->position = this->position % RAINBOW_LENGTH;
 }
 
-Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSection) {
+Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSection) const {
     unsigned int result_color[3] = {0, 0, 0};
     for(int color = 0; color < 3; color++) {
         unsigned int baseValueBefore = getBaseBefore(color, section);
@@ -40,16 +40,16 @@ Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSect
     return Color(result_color);
 }
 
-unsigned int ThemeRainbow::getBaseBefore(unsigned int color, unsigned int section) {
-    return base_values[color][section];
+unsigned int ThemeRainbow::getBaseBefore(unsigned int color, unsigned int section) const {
+    return base_values[subTheme][color][section];
 }
 
-unsigned int ThemeRainbow::getBaseAfter(unsigned int color, unsigned int section) {
-    if(section + 1 < sizeof(base_values)) {
-        return base_values[color][section+1];
+unsigned int ThemeRainbow::getBaseAfter(unsigned int color, unsigned int section) const {
+    if(section + 1 < RAINBOW_SECTIONS) {
+        return base_values[subTheme][color][section+1];
     }
     else {
-        return base_values[color][0];
+        return base_values[subTheme][color][0];
     }
 }
 unsigned int ThemeRainbow::interpolate(unsigned int valueLeft, unsigned int valueRight, unsigned int position, unsigned int maxPosition) {
