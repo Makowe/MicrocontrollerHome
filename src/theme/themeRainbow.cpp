@@ -4,7 +4,7 @@
 // Created by nicom on 14.07.2021.
 //
 
-#include "ThemeRainbow.h"
+#include "themeRainbow.h"
 
 constexpr unsigned int ThemeRainbow::base_values[RAINBOW_SUB_THEMES][3][RAINBOW_SECTIONS];
 

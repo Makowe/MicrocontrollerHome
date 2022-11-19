@@ -2,8 +2,8 @@
 // Created by nicom on 13.03.2021.
 //
 
-#include "LedInterface.h"
-extern unsigned int GLOBAL_BRIGHTNESS;
+#include "ledInterface.h"
+#include "options/brightness.h"
 
 LedInterface::LedInterface() {
     _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT_PIN, NEO_GRB + NEO_KHZ800);
@@ -13,14 +13,15 @@ LedInterface::LedInterface() {
 void LedInterface::setColor(unsigned int number, unsigned int red,
                             unsigned int green, unsigned int blue) {
 
-    unsigned long redMod = red * CORRECTION_RED * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
-    unsigned long greenMod = green * CORRECTION_GREEN * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
-    unsigned long blueMod = blue * CORRECTION_BLUE * GLOBAL_BRIGHTNESS / NUM_BRIGHTNESS_LEVELS / CORRECTION_MAX;
+    unsigned long redMod = red * CORRECTION_RED * brightness / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
+    unsigned long greenMod = green * CORRECTION_GREEN * brightness / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
+    unsigned long blueMod = blue * CORRECTION_BLUE * brightness / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
 
     _pixels.setPixelColor(number, redMod, greenMod, blueMod);
 
-    if (number == 0 and DO_PRINT) {
-        Serial.print("[LED INTER]: ");
+#if DEBUG_LEDS
+    if (number == 0) {
+        Serial.print("[LEDS]: ");
         Serial.print("red: ");
         Serial.print(red);
         Serial.print(" ");
@@ -34,6 +35,7 @@ void LedInterface::setColor(unsigned int number, unsigned int red,
         Serial.print(" ");
         Serial.println(blueMod);
     }
+#endif
 }
 
 void LedInterface::setColor(unsigned int number, Color color) {

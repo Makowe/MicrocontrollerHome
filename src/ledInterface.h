@@ -6,8 +6,8 @@
 #ifndef TEST3_LEDINTERFACE_H
 #define TEST3_LEDINTERFACE_H
 
-#include "Color.h"
 #include "constants.h"
+#include "model/color.h"
 #include <Adafruit_NeoPixel.h>
 
 /*

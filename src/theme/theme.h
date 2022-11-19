@@ -5,8 +5,7 @@
 #ifndef TEST3_THEME_H
 #define TEST3_THEME_H
 
-#include "constants.h"
-#include <Color.h>
+#include <model/color.h>
 
 
 class Theme {

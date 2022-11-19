@@ -5,10 +5,17 @@
 #ifndef TEST3_FILTERPULSATE_H
 #define TEST3_FILTERPULSATE_H
 
+// pulsating
+#define PULSATE_LENGTH 50
+#define PULSATE_MAX 255
+#define PULSATE_MIN 32
+
+#define PULSATE_DEFAULT_SPEED 3
+
+
+#include <filter/filter.h>
+#include <model/color.h>
 #include "constants.h"
-#include <Color.h>
-#include <filter/Filter.h>
-#include "HardwareSerial.h"
 
 #define PULSATE_ARRAY_SIZE (NUM_PIXELS/PULSATE_LENGTH + 3)
 

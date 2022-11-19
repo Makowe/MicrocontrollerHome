@@ -2,8 +2,9 @@
 // Created by nicom on 14.03.2022.
 //
 
-#include "FilterPulsate.h"
+#include "filterPulsate.h"
 #include <new>
+
 Color FilterPulsate::applyFilter(unsigned int pixel_idx, Color color) {
     unsigned int positionOnFade = NUM_PIXELS-1 - pixel_idx + position;
     unsigned int section = positionOnFade / PULSATE_LENGTH;
@@ -55,7 +56,7 @@ void FilterPulsate::calc_next_level() {
         levels[i] = levels[i+1];
     }
     levels[PULSATE_ARRAY_SIZE-1] = new_level;
-    if(DO_PRINT) {
+#if DEBUG_FILTER
         Serial.print("[FILT PULS]:\t");
         Serial.print(levels[0]);
         Serial.print(' ');
@@ -65,7 +66,7 @@ void FilterPulsate::calc_next_level() {
         Serial.print(' ');
         Serial.print(levels[3]);
         Serial.println(' ');
-    }
+#endif
 }
 
 void FilterPulsate::init_levels() {
