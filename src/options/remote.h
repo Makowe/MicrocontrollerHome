@@ -6,14 +6,13 @@
 #define TEST3_REMOTE_H
 
 #include "debug.h"
+#include <stdint.h>
 
 #if DEBUG_REMOTE
 #include <Arduino.h>
 #endif
 
-#define IR_IN_PIN 8
-#define IR_HIGH_PIN 9
-#define IR_LOW_PIN 10
+
 
 #define IR_BUTTON_2 0x46
 #define IR_BUTTON_3 0x47

@@ -6,6 +6,8 @@
 // pins
 #define LED_OUT_PIN 3
 #define IR_INPUT_PIN 2
+#define IR_HIGH_PIN 9
+#define IR_LOW_PIN 10
 
 //constants
 #define NUM_PIXELS 198

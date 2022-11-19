@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "constants.h"
 #include "ledInterface.h"
 #include "theme/themeRainbow.h"
 #include <Arduino.h>
@@ -16,7 +17,6 @@
 #include "../lib/TimerInterrupt-1.8.0/src/TimerInterrupt.h"
 
 #define DECODE_NEC
-#include "options/remote.h"
 
 
 //
@@ -31,16 +31,17 @@ Theme* theme = &rainbowTheme;
 FilterPulsate filterPulsate = FilterPulsate(PULSATE_DEFAULT_SPEED);
 Filter* filter = &filterPulsate;
 
-IRrecv irrecv(IR_IN_PIN);
+IRrecv irrecv(IR_INPUT_PIN);
 decode_results results;
-unsigned lockIR = 0;
-bool lockLeds = true;
+unsigned int lockIR = 0;
+unsigned int lockLeds = 0;
+bool discardNextIrSignal = true;
 
 void TimerHandler1() {
 #if DEBUG_MAIN
     Serial.println("[MAIN]: Timer 1 Interrupt");
 #endif
-    lockLeds = false;
+    if(lockLeds > 0) { lockLeds -= 1; }
 }
 
 void updateLeds() {
@@ -66,7 +67,7 @@ void setup() {
     Serial.println("[MAIN]: Setup");
 #endif
 
-    pinMode(IR_IN_PIN, INPUT);
+    pinMode(IR_INPUT_PIN, INPUT);
 
     pinMode(IR_LOW_PIN, OUTPUT);
     pinMode(IR_HIGH_PIN, OUTPUT);
@@ -81,20 +82,20 @@ void setup() {
 
 void loop() {
 
-#if DEBUG_MAIN
-    Serial.print("[MAIN]: Loop");
-#endif
-
     bool newSignal = irrecv.decode();
     if (newSignal)
     {
         if(irrecv.decodedIRData.flags == 0 || lockIR == 0) {
-
 #if DEBUG_REMOTE
             print_detected_button(irrecv.decodedIRData.command);
 #endif
+            if(discardNextIrSignal) {
+                discardNextIrSignal = false;
+            }
+            else {
+                buttonClicked(irrecv.decodedIRData.command);
+            }
             lockIR = IR_LOCK_TIME;
-            buttonClicked(irrecv.decodedIRData.command);
         }
         else {
 #if DEBUG_REMOTE
@@ -105,8 +106,21 @@ void loop() {
         irrecv.resume();
     }
 
+    if(!digitalRead(IR_INPUT_PIN)) {
+#if DEBUG_REMOTE
+        if(lockLeds <= 1) {
+            Serial.println("[REMOTE]: Block LEDs to not disturb IR Signal Reading");
+            irrecv.start(50);
+        }
+#endif
+        lockLeds = 5;
+
+    }
+
     if(!lockLeds) {
-        lockLeds = true;
+        irrecv.stop();
+        discardNextIrSignal = true;
+        lockLeds = 1;
         updateLeds();
         led.show();
     }
