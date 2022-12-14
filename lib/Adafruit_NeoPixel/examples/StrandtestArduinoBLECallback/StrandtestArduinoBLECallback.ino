@@ -201,7 +201,7 @@ void rainbow(int wait)
             // (strip.numPixels() steps):
             int pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
             // strip.ColorHSV() can take 1 or 3 arguments: a hue (0 to 65535) or
-            // optionally add saturation and value (brightness) (each 0 to 255).
+            // optionally add saturation and value (brightnessVal) (each 0 to 255).
             // Here we're using just the single-argument hue variant. The result
             // is passed through strip.gamma32() to provide 'truer' colors
             // before assigning to each pixel:

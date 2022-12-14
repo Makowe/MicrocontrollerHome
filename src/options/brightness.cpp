@@ -5,13 +5,13 @@
 #include "brightness.h"
 #include <Arduino.h>
 
-unsigned int brightness_level = 3;
+unsigned int brightnessLevel = 3;
 
 void changeBrightness(bool increase) {
-    if(increase && brightness_level < NUM_BRIGHTNESS_LEVELS-1) { brightness_level += 1; }
-    if(!increase && brightness_level > 0) { brightness_level -= 1; }
-    Serial.print("Set brightness to level: ");
-    Serial.print(brightness_level);
+    if(increase && brightnessLevel < NUM_BRIGHTNESS_LEVELS-1) { brightnessLevel += 1; }
+    if(!increase && brightnessLevel > 0) { brightnessLevel -= 1; }
+    Serial.print("Set brightnessVal to level: ");
+    Serial.print(brightnessLevel);
     Serial.print(", value: ");
-    Serial.println(brightness);
+    Serial.println(brightnessVal);
 }

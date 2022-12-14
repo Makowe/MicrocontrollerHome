@@ -16,7 +16,7 @@
 #define RAINBOW_DEFAULT_SPEED 2
 #define RAINBOW_DEFAULT_COMPRESS 4
 
-#include "theme.h"
+#include "theme/theme.h"
 #include <model/color.h>
 
 class ThemeRainbow : public Theme {
@@ -26,8 +26,11 @@ public:
     void nextTick() override;
 
     void nextSubTheme() override {
-        subTheme + 1 == RAINBOW_SUB_THEMES ? subTheme = 0 : subTheme+=1;
-    }
+        _currentSubTheme >= RAINBOW_SUB_THEMES - 1 ? _currentSubTheme = 0 : _currentSubTheme+=1;
+    };
+    void previousSubTheme() override {
+        _currentSubTheme == 0 ? _currentSubTheme = RAINBOW_SUB_THEMES - 1 : _currentSubTheme-=1;
+    };
     unsigned int getBaseBefore(unsigned int color, unsigned int section) const;
     unsigned int getBaseAfter(unsigned int color, unsigned int section) const;
     static unsigned int interpolate(unsigned int valueLeft, unsigned int valueRight, unsigned int position, unsigned int maxPosition);
@@ -35,12 +38,12 @@ public:
 private:
     Color getSectionColor(unsigned int section, unsigned int posInSection) const;
 
-    unsigned int position = 0;
-    unsigned int speed;
-    unsigned int compress;
-    unsigned int subTheme = 0;
+    unsigned int _position = 0;
+    unsigned int _speed;
+    unsigned int _compress;
+    unsigned int _currentSubTheme = 0;
 
-    constexpr static unsigned int base_values[RAINBOW_SUB_THEMES][3][RAINBOW_SECTIONS] = {
+    constexpr static unsigned int _base_values[RAINBOW_SUB_THEMES][3][RAINBOW_SECTIONS] = {
             {
                     // https://coolors.co/ff0000-ffff00-00ff00-00ffff-0000ff-ff00ff
                     {255, 255, 0, 0, 0, 255},

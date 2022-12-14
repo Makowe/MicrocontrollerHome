@@ -10,5 +10,4 @@
 #define DEBUG_REMOTE 1
 #define DEBUG_FILTER 0
 
-
 #endif//TEST3_DEBUG_H

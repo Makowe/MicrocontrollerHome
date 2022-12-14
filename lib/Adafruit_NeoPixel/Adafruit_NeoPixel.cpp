@@ -234,7 +234,7 @@ void Adafruit_NeoPixel::show(void) {
 // AVR MCUs -- ATmega & ATtiny (no XMEGA) ---------------------------------
 
   volatile uint16_t
-    i   = numBytes; // Loop counter
+    i   = numBytes; // Loop timeSinceLastButtonProcess
   volatile uint8_t
    *ptr = pixels,   // Pointer to next byte
     b   = *ptr++,   // Current byte value
@@ -1382,14 +1382,14 @@ void Adafruit_NeoPixel::show(void) {
 
 // ---------- END Constants for the EasyDMA implementation -------------
 //
-// If there is no device available an alternative cycle-counter
+// If there is no device available an alternative cycle-timeSinceLastButtonProcess
 // implementation is tried.
 // The nRF52 runs with a fixed clock of 64Mhz. The alternative
 // implementation is the same as the one used for the Teensy 3.0/1/2 but
 // with the Nordic SDK HAL & registers syntax.
 // The number of cycles was hand picked and is guaranteed to be 100%
 // organic to preserve freshness and high accuracy.
-// ---------- BEGIN Constants for cycle counter implementation ---------
+// ---------- BEGIN Constants for cycle timeSinceLastButtonProcess implementation ---------
 #define CYCLES_800_T0H  18  // ~0.36 uS
 #define CYCLES_800_T1H  41  // ~0.76 uS
 #define CYCLES_800      71  // ~1.25 uS
@@ -1397,7 +1397,7 @@ void Adafruit_NeoPixel::show(void) {
 #define CYCLES_400_T0H  26  // ~0.50 uS
 #define CYCLES_400_T1H  70  // ~1.26 uS
 #define CYCLES_400      156 // ~2.50 uS
-// ---------- END of Constants for cycle counter implementation --------
+// ---------- END of Constants for cycle timeSinceLastButtonProcess implementation --------
 
   // To support both the SoftDevice + Neopixels we use the EasyDMA
   // feature from the NRF25. However this technique implies to
@@ -1407,7 +1407,7 @@ void Adafruit_NeoPixel::show(void) {
   // The two additional bytes at the end are needed to reset the
   // sequence.
   //
-  // If there is not enough memory, we will fall back to cycle counter
+  // If there is not enough memory, we will fall back to cycle timeSinceLastButtonProcess
   // using DWT
   uint32_t  pattern_size   = numBytes*8*sizeof(uint16_t)+2*sizeof(uint16_t);
   uint16_t* pixels_pattern = NULL;
@@ -1447,7 +1447,7 @@ void Adafruit_NeoPixel::show(void) {
   // Use the identified device to choose the implementation
   // If a PWM device is available use DMA
   if( (pixels_pattern != NULL) && (pwm != NULL) ) {
-    uint16_t pos = 0; // bit position
+    uint16_t pos = 0; // bit _position
 
     for(uint16_t n=0; n<numBytes; n++) {
       uint8_t pix = pixels[n];
@@ -1639,7 +1639,7 @@ void Adafruit_NeoPixel::show(void) {
 // END of NRF52 implementation
 
 #elif defined (__SAMD21E17A__) || defined(__SAMD21G18A__)  || defined(__SAMD21E18A__) || defined(__SAMD21J18A__) // Arduino Zero, Gemma/Trinket M0, SODAQ Autonomo and others
-  // Tried this with a timer/counter, couldn't quite get adequate
+  // Tried this with a timer/timeSinceLastButtonProcess, couldn't quite get adequate
   // resolution. So yay, you get a load of goofball NOPs...
 
   uint8_t  *ptr, *end, p, bitMask, portNum;
@@ -1783,7 +1783,7 @@ void Adafruit_NeoPixel::show(void) {
 
 #elif defined (ARDUINO_STM32_FEATHER) // FEATHER WICED (120MHz)
 
-  // Tried this with a timer/counter, couldn't quite get adequate
+  // Tried this with a timer/timeSinceLastButtonProcess, couldn't quite get adequate
   // resolution. So yay, you get a load of goofball NOPs...
 
   uint8_t  *ptr, *end, p, bitMask;
@@ -2246,9 +2246,9 @@ void Adafruit_NeoPixel::setPin(uint16_t p) {
   @brief   Set a pixel's color using separate red, green and blue
            components. If using RGBW pixels, white will be set to 0.
   @param   n  Pixel index, starting from 0.
-  @param   r  Red brightness, 0 = minimum (off), 255 = maximum.
-  @param   g  Green brightness, 0 = minimum (off), 255 = maximum.
-  @param   b  Blue brightness, 0 = minimum (off), 255 = maximum.
+  @param   r  Red brightnessVal, 0 = minimum (off), 255 = maximum.
+  @param   g  Green brightnessVal, 0 = minimum (off), 255 = maximum.
+  @param   b  Blue brightnessVal, 0 = minimum (off), 255 = maximum.
 */
 void Adafruit_NeoPixel::setPixelColor(
  uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
@@ -2276,10 +2276,10 @@ void Adafruit_NeoPixel::setPixelColor(
   @brief   Set a pixel's color using separate red, green, blue and white
            components (for RGBW NeoPixels only).
   @param   n  Pixel index, starting from 0.
-  @param   r  Red brightness, 0 = minimum (off), 255 = maximum.
-  @param   g  Green brightness, 0 = minimum (off), 255 = maximum.
-  @param   b  Blue brightness, 0 = minimum (off), 255 = maximum.
-  @param   w  White brightness, 0 = minimum (off), 255 = maximum, ignored
+  @param   r  Red brightnessVal, 0 = minimum (off), 255 = maximum.
+  @param   g  Green brightnessVal, 0 = minimum (off), 255 = maximum.
+  @param   b  Blue brightnessVal, 0 = minimum (off), 255 = maximum.
+  @param   w  White brightnessVal, 0 = minimum (off), 255 = maximum, ignored
               if using RGB pixels.
 */
 void Adafruit_NeoPixel::setPixelColor(
@@ -2380,8 +2380,8 @@ void Adafruit_NeoPixel::fill(uint32_t c, uint16_t first, uint16_t count) {
                 prior NeoPixel examples).
   @param   sat  Saturation, 8-bit value, 0 (min or pure grayscale) to 255
                 (max or pure hue). Default of 255 if unspecified.
-  @param   val  Value (brightness), 8-bit value, 0 (min / black / off) to
-                255 (max or full brightness). Default of 255 if unspecified.
+  @param   val  Value (brightnessVal), 8-bit value, 0 (min / black / off) to
+                255 (max or full brightnessVal). Default of 255 if unspecified.
   @return  Packed 32-bit RGB with the most significant byte set to 0 -- the
            white element of WRGB pixels is NOT utilized. Result is linearly
            but not perceptually correct, so you may want to pass the result
@@ -2474,10 +2474,10 @@ uint32_t Adafruit_NeoPixel::ColorHSV(uint16_t hue, uint8_t sat, uint8_t val) {
   @return  'Packed' 32-bit RGB or WRGB value. Most significant byte is white
            (for RGBW pixels) or 0 (for RGB pixels), next is red, then green,
            and least significant byte is blue.
-  @note    If the strip brightness has been changed from the default value
+  @note    If the strip brightnessVal has been changed from the default value
            of 255, the color read from a pixel may not exactly match what
            was previously written with one of the setPixelColor() functions.
-           This gets more pronounced at lower brightness levels.
+           This gets more pronounced at lower brightnessVal levels.
 */
 uint32_t Adafruit_NeoPixel::getPixelColor(uint16_t n) const {
   if(n >= numLEDs) return 0; // Out of bounds, return no color.
@@ -2491,12 +2491,12 @@ uint32_t Adafruit_NeoPixel::getPixelColor(uint16_t n) const {
       // attempts to scale back to an approximation of the original 24-bit
       // value used when setting the pixel color, but there will always be
       // some error -- those bits are simply gone. Issue is most
-      // pronounced at low brightness levels.
+      // pronounced at low brightnessVal levels.
       return (((uint32_t)(p[rOffset] << 8) / brightness) << 16) |
              (((uint32_t)(p[gOffset] << 8) / brightness) <<  8) |
              ( (uint32_t)(p[bOffset] << 8) / brightness       );
     } else {
-      // No brightness adjustment has been made -- return 'raw' color
+      // No brightnessVal adjustment has been made -- return 'raw' color
       return ((uint32_t)p[rOffset] << 16) |
              ((uint32_t)p[gOffset] <<  8) |
               (uint32_t)p[bOffset];
@@ -2519,42 +2519,42 @@ uint32_t Adafruit_NeoPixel::getPixelColor(uint16_t n) const {
 
 
 /*!
-  @brief   Adjust output brightness. Does not immediately affect what's
+  @brief   Adjust output brightnessVal. Does not immediately affect what's
            currently displayed on the LEDs. The next call to show() will
            refresh the LEDs at this level.
   @param   b  Brightness setting, 0=minimum (off), 255=brightest.
   @note    This was intended for one-time use in one's setup() function,
            not as an animation effect in itself. Because of the way this
            library "pre-multiplies" LED colors in RAM, changing the
-           brightness is often a "lossy" operation -- what you write to
+           brightnessVal is often a "lossy" operation -- what you write to
            pixels isn't necessary the same as what you'll read back.
-           Repeated brightness changes using this function exacerbate the
+           Repeated brightnessVal changes using this function exacerbate the
            problem. Smart programs therefore treat the strip as a
            write-only resource, maintaining their own state to render each
            frame of an animation, not relying on read-modify-write.
 */
 void Adafruit_NeoPixel::setBrightness(uint8_t b) {
-  // Stored brightness value is different than what's passed.
+  // Stored brightnessVal value is different than what's passed.
   // This simplifies the actual scaling math later, allowing a fast
-  // 8x8-bit multiply and taking the MSB. 'brightness' is a uint8_t,
-  // adding 1 here may (intentionally) roll over...so 0 = max brightness
+  // 8x8-bit multiply and taking the MSB. 'brightnessVal' is a uint8_t,
+  // adding 1 here may (intentionally) roll over...so 0 = max brightnessVal
   // (color values are interpreted literally; no scaling), 1 = min
-  // brightness (off), 255 = just below max brightness.
+  // brightnessVal (off), 255 = just below max brightnessVal.
   uint8_t newBrightness = b + 1;
   if(newBrightness != brightness) { // Compare against prior value
     // Brightness has changed -- re-scale existing data in RAM,
     // This process is potentially "lossy," especially when increasing
-    // brightness. The tight timing in the WS2811/WS2812 code means there
+    // brightnessVal. The tight timing in the WS2811/WS2812 code means there
     // aren't enough free cycles to perform this scaling on the fly as data
     // is issued. So we make a pass through the existing color data in RAM
     // and scale it (subsequent graphics commands also work at this
-    // brightness level). If there's a significant step up in brightness,
+    // brightnessVal level). If there's a significant step up in brightnessVal,
     // the limited number of steps (quantization) in the old data will be
     // quite visible in the re-scaled version. For a non-destructive
     // change, you'll need to re-render the full strip data. C'est la vie.
     uint8_t  c,
             *ptr           = pixels,
-             oldBrightness = brightness - 1; // De-wrap old brightness value
+             oldBrightness = brightness - 1; // De-wrap old brightnessVal value
     uint16_t scale;
     if(oldBrightness == 0) scale = 0; // Avoid /0
     else if(b == 255) scale = 65535 / oldBrightness;
@@ -2568,7 +2568,7 @@ void Adafruit_NeoPixel::setBrightness(uint8_t b) {
 }
 
 /*!
-  @brief   Retrieve the last-set brightness value for the strip.
+  @brief   Retrieve the last-set brightnessVal value for the strip.
   @return  Brightness value: 0 = minimum (off), 255 = maximum.
 */
 uint8_t Adafruit_NeoPixel::getBrightness(void) const {

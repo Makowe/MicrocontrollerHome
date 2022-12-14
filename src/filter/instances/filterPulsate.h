@@ -6,11 +6,11 @@
 #define TEST3_FILTERPULSATE_H
 
 // pulsating
-#define PULSATE_LENGTH 50
+#define PULSATE_LENGTH 25
 #define PULSATE_MAX 255
-#define PULSATE_MIN 32
+#define PULSATE_MIN 64
 
-#define PULSATE_DEFAULT_SPEED 3
+#define PULSATE_DEFAULT_SPEED 1
 
 
 #include <filter/filter.h>

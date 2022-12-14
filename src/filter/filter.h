@@ -11,6 +11,8 @@ class Filter {
 public:
     virtual Color applyFilter(unsigned int pixel_idx, Color color) = 0;
     virtual void nextTick() = 0;
+
+    Filter* nextFilter = nullptr;
 };
 
 

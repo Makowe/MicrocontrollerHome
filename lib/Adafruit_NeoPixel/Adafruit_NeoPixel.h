@@ -274,17 +274,17 @@ class Adafruit_NeoPixel {
                 still does the expected contiguous thing.
     @return  Sine result, 0 to 255, or -128 to +127 if type-converted to
              a signed int8_t, but you'll most likely want unsigned as this
-             output is often used for pixel brightness in animation effects.
+             output is often used for pixel brightnessVal in animation effects.
   */
   static uint8_t    sine8(uint8_t x) {
     return pgm_read_byte(&_NeoPixelSineTable[x]); // 0-255 in, 0-255 out
   }
   /*!
-    @brief   An 8-bit gamma-correction function for basic pixel brightness
+    @brief   An 8-bit gamma-correction function for basic pixel brightnessVal
              adjustment. Makes color transitions appear more perceptially
              correct.
-    @param   x  Input brightness, 0 (minimum or off/black) to 255 (maximum).
-    @return  Gamma-adjusted brightness, can then be passed to one of the
+    @param   x  Input brightnessVal, 0 (minimum or off/black) to 255 (maximum).
+    @return  Gamma-adjusted brightnessVal, can then be passed to one of the
              setPixelColor() functions. This uses a fixed gamma correction
              exponent of 2.6, which seems reasonably okay for average
              NeoPixels in average tasks. If you need finer control you'll
@@ -296,9 +296,9 @@ class Adafruit_NeoPixel {
   /*!
     @brief   Convert separate red, green and blue values into a single
              "packed" 32-bit RGB color.
-    @param   r  Red brightness, 0 to 255.
-    @param   g  Green brightness, 0 to 255.
-    @param   b  Blue brightness, 0 to 255.
+    @param   r  Red brightnessVal, 0 to 255.
+    @param   g  Green brightnessVal, 0 to 255.
+    @param   b  Blue brightnessVal, 0 to 255.
     @return  32-bit packed RGB value, which can then be assigned to a
              variable for later use or passed to the setPixelColor()
              function. Packed RGB format is predictable, regardless of
@@ -310,10 +310,10 @@ class Adafruit_NeoPixel {
   /*!
     @brief   Convert separate red, green, blue and white values into a
              single "packed" 32-bit WRGB color.
-    @param   r  Red brightness, 0 to 255.
-    @param   g  Green brightness, 0 to 255.
-    @param   b  Blue brightness, 0 to 255.
-    @param   w  White brightness, 0 to 255.
+    @param   r  Red brightnessVal, 0 to 255.
+    @param   g  Green brightnessVal, 0 to 255.
+    @param   b  Blue brightnessVal, 0 to 255.
+    @param   w  White brightnessVal, 0 to 255.
     @return  32-bit packed WRGB value, which can then be assigned to a
              variable for later use or passed to the setPixelColor()
              function. Packed WRGB format is predictable, regardless of
@@ -346,7 +346,7 @@ class Adafruit_NeoPixel {
   uint16_t          numLEDs;    ///< Number of RGB LEDs in strip
   uint16_t          numBytes;   ///< Size of 'pixels' buffer below
   int16_t           pin;        ///< Output pin number (-1 if not yet set)
-  uint8_t           brightness; ///< Strip brightness 0-255 (stored as +1)
+  uint8_t           brightness; ///< Strip brightnessVal 0-255 (stored as +1)
   uint8_t          *pixels;     ///< Holds LED color values (3 or 4 bytes each)
   uint8_t           rOffset;    ///< Red index within each 3- or 4-byte pixel
   uint8_t           gOffset;    ///< Index of green byte

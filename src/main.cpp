@@ -1,10 +1,12 @@
-#include "debug.h"
 #include "constants.h"
+#include "debug.h"
 #include "ledInterface.h"
-#include "theme/themeRainbow.h"
-#include <Arduino.h>
-#include <filter/filterPulsate.h>
 #include "options/remote.h"
+#include "theme/instances/themeRainbow.h"
+#include <Arduino.h>
+#include <filter/filterHandler.h>
+#include <filter/instances/filterPulsate.h>
+#include <theme/themeHandler.h>
 
 #define USE_TIMER_1     true
 #define USE_TIMER_2     false
@@ -18,30 +20,21 @@
 
 #define DECODE_NEC
 
-
 //
 // GLOBALS
 //
 
 LedInterface led;
-
-ThemeRainbow rainbowTheme = ThemeRainbow(RAINBOW_DEFAULT_SPEED, RAINBOW_DEFAULT_COMPRESS);
-Theme* theme = &rainbowTheme;
-
-FilterPulsate filterPulsate = FilterPulsate(PULSATE_DEFAULT_SPEED);
-Filter* filter = &filterPulsate;
+unsigned int timeSinceLastButtonProcess = 0;
 
 IRrecv irrecv(IR_INPUT_PIN);
 decode_results results;
-unsigned int lockIR = 0;
-unsigned int lockLeds = 0;
+unsigned int IRButtonHold = 0;
+
 bool discardNextIrSignal = true;
 
 void TimerHandler1() {
-#if DEBUG_MAIN
-    Serial.println("[MAIN]: Timer 1 Interrupt");
-#endif
-    if(lockLeds > 0) { lockLeds -= 1; }
+    timeSinceLastButtonProcess++;
 }
 
 void updateLeds() {
@@ -49,12 +42,12 @@ void updateLeds() {
     Serial.println("[LEDS]: Update LEDs");
 #endif
 
-    theme->nextTick();
-    filter->nextTick();
+    currentTheme->nextTick();
+    currentFilter->nextTick();
 
     for (unsigned int pixel_idx = 0; pixel_idx < NUM_PIXELS; pixel_idx++) {
-        Color color = theme->calcTheme(pixel_idx);
-        color = filter->applyFilter(pixel_idx, color);
+        Color color = currentTheme->calcTheme(pixel_idx);
+        color = currentFilter->applyFilter(pixel_idx, color);
         led.setColor(pixel_idx, color);
     }
 }
@@ -78,6 +71,9 @@ void setup() {
 
     ITimer1.init();
     ITimer1.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1);
+
+    initThemes();
+    initFilters();
 }
 
 void loop() {
@@ -85,7 +81,21 @@ void loop() {
     bool newSignal = irrecv.decode();
     if (newSignal)
     {
-        if(irrecv.decodedIRData.flags == 0 || lockIR == 0) {
+        if(timeSinceLastButtonProcess < IR_BLOCK_DELAY_AFTER_EDIT) {
+            /* The IR is blocked because the user just switched from editing to running mode. */
+        }
+        else if(discardNextIrSignal) {
+            /* The button signal is ignore because it was just used to switch into editor mode. */
+            discardNextIrSignal = false;
+        }
+        else if(timeSinceLastButtonProcess < IR_BUTTON_HOLD_DELAY) {
+            /* The button has already been processed. It needs to be held for a longer time to be processed again. */
+#if DEBUG_REMOTE
+            print_detected_button(irrecv.decodedIRData.command, true);
+#endif
+        }
+        else if(irrecv.decodedIRData.flags == 0 || timeSinceLastButtonProcess == IR_BUTTON_HOLD_DELAY) {
+            /* The signal is either new or the button is held for a certain time and therefore processed again. */
 #if DEBUG_REMOTE
             print_detected_button(irrecv.decodedIRData.command);
 #endif
@@ -94,33 +104,23 @@ void loop() {
             }
             else {
                 buttonClicked(irrecv.decodedIRData.command);
+                updateLeds();
+                led.show();
+                timeSinceLastButtonProcess = 0;
             }
-            lockIR = IR_LOCK_TIME;
-        }
-        else {
-#if DEBUG_REMOTE
-            print_detected_button(irrecv.decodedIRData.command, true);
-#endif
-            lockIR -= 1;
         }
         irrecv.resume();
     }
 
-    if(!digitalRead(IR_INPUT_PIN)) {
+    if(LedMode == LED_MODE_RUNNING && timeSinceLastButtonProcess >= IR_BLOCK_DELAY_AFTER_EDIT && !digitalRead(IR_INPUT_PIN)) {
 #if DEBUG_REMOTE
-        if(lockLeds <= 1) {
-            Serial.println("[REMOTE]: Block LEDs to not disturb IR Signal Reading");
-            irrecv.start(50);
-        }
+        Serial.println("[REMOTE]: Switch to Editor Mode");
 #endif
-        lockLeds = 5;
-
+        LedMode = LED_MODE_EDIT;
     }
 
-    if(!lockLeds) {
-        irrecv.stop();
+    if(LedMode == LED_MODE_RUNNING) {
         discardNextIrSignal = true;
-        lockLeds = 1;
         updateLeds();
         led.show();
     }

@@ -32,9 +32,11 @@
 #define IR_BUTTON_RIGHT 0x5A
 #define IR_BUTTON_OK 0x1C
 
-#define IR_LOCK_TIME 5
+#define IR_BUTTON_HOLD_DELAY 3
+#define IR_BLOCK_DELAY_AFTER_EDIT 5
 
 #if DEBUG_REMOTE
+
 #define IR_BUTTON_2_NAME "2"
 #define IR_BUTTON_3_NAME "3"
 #define IR_BUTTON_4_NAME "4"
@@ -81,9 +83,6 @@ constexpr ButtonToName buttonNames[] {
 #endif
 
 void buttonClicked(uint16_t button);
-void changeFilter(bool forward);
-void setTheme(int theme);
-void tooglePause();
 
 #if DEBUG_REMOTE
 void print_detected_button(uint16_t button, bool repetition = false);

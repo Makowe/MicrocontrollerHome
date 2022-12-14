@@ -13,7 +13,7 @@
 // How many NeoPixels are attached to the Arduino?
 #define LED_COUNT  60
 
-// NeoPixel brightness, 0 (min) to 255 (max)
+// NeoPixel brightnessVal, 0 (min) to 255 (max)
 #define BRIGHTNESS 50 // Set BRIGHTNESS to about 1/5 (max = 255)
 
 // Declare our NeoPixel strip object:
@@ -91,7 +91,7 @@ void whiteOverRainbow(int whiteSpeed, int whiteLength) {
 
     strip.show(); // Update strip with new contents
     // There's no delay here, it just runs full-tilt until the timer and
-    // counter combination below runs out.
+    // timeSinceLastButtonProcess combination below runs out.
 
     firstPixelHue += 40; // Advance just a little along the color wheel
 
@@ -110,7 +110,7 @@ void whiteOverRainbow(int whiteSpeed, int whiteLength) {
 
 void pulseWhite(uint8_t wait) {
   for(int j=0; j<256; j++) { // Ramp up from 0 to 255
-    // Fill entire strip with white at gamma-corrected brightness level 'j':
+    // Fill entire strip with white at gamma-corrected brightnessVal level 'j':
     strip.fill(strip.Color(0, 0, 0, strip.gamma8(j)));
     strip.show();
     delay(wait);
@@ -141,7 +141,7 @@ void rainbowFade2White(int wait, int rainbowLoops, int whiteLoops) {
       uint32_t pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
 
       // strip.ColorHSV() can take 1 or 3 arguments: a hue (0 to 65535) or
-      // optionally add saturation and value (brightness) (each 0 to 255).
+      // optionally add saturation and value (brightnessVal) (each 0 to 255).
       // Here we're using just the three-argument variant, though the
       // second value (saturation) is a constant 255.
       strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(pixelHue, 255,
@@ -162,7 +162,7 @@ void rainbowFade2White(int wait, int rainbowLoops, int whiteLoops) {
 
   for(int k=0; k<whiteLoops; k++) {
     for(int j=0; j<256; j++) { // Ramp up 0 to 255
-      // Fill entire strip with white at gamma-corrected brightness level 'j':
+      // Fill entire strip with white at gamma-corrected brightnessVal level 'j':
       strip.fill(strip.Color(0, 0, 0, strip.gamma8(j)));
       strip.show();
     }

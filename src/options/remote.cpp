@@ -6,6 +6,9 @@
 #include "brightness.h"
 #include "constants.h"
 #include <Arduino.h>
+#include <filter/filterHandler.h>
+#include <ledInterface.h>
+#include <theme/themeHandler.h>
 
 void buttonClicked(uint16_t button) {
     switch (button) {
@@ -16,30 +19,30 @@ void buttonClicked(uint16_t button) {
             changeBrightness(false);
             break;
         case IR_BUTTON_OK:
-            tooglePause();
+#if DEBUG_REMOTE
+            Serial.println("[REMOTE]: Switch LedMode to running.");
+#endif
+            LedMode = LED_MODE_RUNNING;
             break;
         case IR_BUTTON_RIGHT:
-            changeFilter(true);
+            currentTheme->nextSubTheme();
             break;
         case IR_BUTTON_LEFT:
-            changeFilter(false);
-        case IR_BUTTON_0:
-            setTheme(0);
+            currentTheme->previousSubTheme();
             break;
-        case IR_BUTTON_1:
-            setTheme(1);
+        case IR_BUTTON_STAR:
+            selectNextTheme();
+            Serial.println("[REMOTE]: Select next Theme");
+            break;
+        case IR_BUTTON_HASH:
+            selectNextFilter();
+            Serial.println("[REMOTE]: Select next Filter");
             break;
         default:
             break;
     }
 }
 
-
-
-
-void changeFilter(bool forward) { }
-void setTheme(int theme) { }
-void tooglePause() { }
 
 #if DEBUG_REMOTE
 

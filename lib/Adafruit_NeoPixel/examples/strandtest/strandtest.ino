@@ -59,9 +59,9 @@ void loop() {
   colorWipe(strip.Color(  0,   0, 255), 50); // Blue
 
   // Do a theater marquee effect in various colors...
-  theaterChase(strip.Color(127, 127, 127), 50); // White, half brightness
-  theaterChase(strip.Color(127,   0,   0), 50); // Red, half brightness
-  theaterChase(strip.Color(  0,   0, 127), 50); // Blue, half brightness
+  theaterChase(strip.Color(127, 127, 127), 50); // White, half brightnessVal
+  theaterChase(strip.Color(127,   0,   0), 50); // Red, half brightnessVal
+  theaterChase(strip.Color(  0,   0, 127), 50); // Blue, half brightnessVal
 
   rainbow(10);             // Flowing rainbow cycle along the whole strip
   theaterChaseRainbow(50); // ThemeRainbow-enhanced theaterChase variant
@@ -113,7 +113,7 @@ void rainbow(int wait) {
       // (strip.numPixels() steps):
       int pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
       // strip.ColorHSV() can take 1 or 3 arguments: a hue (0 to 65535) or
-      // optionally add saturation and value (brightness) (each 0 to 255).
+      // optionally add saturation and value (brightnessVal) (each 0 to 255).
       // Here we're using just the single-argument hue variant. The result
       // is passed through strip.gamma32() to provide 'truer' colors
       // before assigning to each pixel:

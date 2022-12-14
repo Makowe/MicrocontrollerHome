@@ -5,6 +5,9 @@
 #include "ledInterface.h"
 #include "options/brightness.h"
 
+
+uint8_t LedMode = LED_MODE_RUNNING;
+
 LedInterface::LedInterface() {
     _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT_PIN, NEO_GRB + NEO_KHZ800);
     this->begin();
@@ -13,9 +16,9 @@ LedInterface::LedInterface() {
 void LedInterface::setColor(unsigned int number, unsigned int red,
                             unsigned int green, unsigned int blue) {
 
-    unsigned long redMod = red * CORRECTION_RED * brightness / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
-    unsigned long greenMod = green * CORRECTION_GREEN * brightness / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
-    unsigned long blueMod = blue * CORRECTION_BLUE * brightness / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
+    unsigned long redMod = red * CORRECTION_RED * brightnessVal / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
+    unsigned long greenMod = green * CORRECTION_GREEN * brightnessVal / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
+    unsigned long blueMod = blue * CORRECTION_BLUE * brightnessVal / CORRECTION_DENOMINATOR / BRIGHTNESS_DENOMINATOR;
 
     _pixels.setPixelColor(number, redMod, greenMod, blueMod);
 

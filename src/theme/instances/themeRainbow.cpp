@@ -6,12 +6,12 @@
 
 #include "themeRainbow.h"
 
-constexpr unsigned int ThemeRainbow::base_values[RAINBOW_SUB_THEMES][3][RAINBOW_SECTIONS];
+constexpr unsigned int ThemeRainbow::_base_values[RAINBOW_SUB_THEMES][3][RAINBOW_SECTIONS];
 
-ThemeRainbow::ThemeRainbow(unsigned int speed, unsigned int compress) : speed(speed), compress(compress) {}
+ThemeRainbow::ThemeRainbow(unsigned int speed, unsigned int compress) : _speed(speed), _compress(compress) {}
 
 Color ThemeRainbow::calcTheme(unsigned int pixel_idx) {
-    unsigned int rainbowPosition = (this->position + (pixel_idx * this->compress)) % RAINBOW_LENGTH;
+    unsigned int rainbowPosition = (this->_position + (pixel_idx * this->_compress)) % RAINBOW_LENGTH;
 
     unsigned int sectionNumber = rainbowPosition / RAINBOW_WIDTH_SECTION;
     unsigned int posInSection = rainbowPosition % RAINBOW_WIDTH_SECTION;
@@ -19,8 +19,8 @@ Color ThemeRainbow::calcTheme(unsigned int pixel_idx) {
 }
 
 void ThemeRainbow::nextTick() {
-    this->position += this->speed;
-    this->position = this->position % RAINBOW_LENGTH;
+    this->_position += this->_speed;
+    this->_position = this->_position % RAINBOW_LENGTH;
 }
 
 Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSection) const {
@@ -41,15 +41,15 @@ Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSect
 }
 
 unsigned int ThemeRainbow::getBaseBefore(unsigned int color, unsigned int section) const {
-    return base_values[subTheme][color][section];
+    return _base_values[_currentSubTheme][color][section];
 }
 
 unsigned int ThemeRainbow::getBaseAfter(unsigned int color, unsigned int section) const {
     if(section + 1 < RAINBOW_SECTIONS) {
-        return base_values[subTheme][color][section+1];
+        return _base_values[_currentSubTheme][color][section+1];
     }
     else {
-        return base_values[subTheme][color][0];
+        return _base_values[_currentSubTheme][color][0];
     }
 }
 unsigned int ThemeRainbow::interpolate(unsigned int valueLeft, unsigned int valueRight, unsigned int position, unsigned int maxPosition) {
