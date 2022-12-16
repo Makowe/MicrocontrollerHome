@@ -5,10 +5,10 @@
 #ifndef TEST3_THEMEPLAIN_H
 #define TEST3_THEMEPLAIN_H
 
-
 #include "../theme.h"
 
 #define PLAIN_SUB_THEMES 7
+
 
 class ThemePlain : public Theme {
 public:

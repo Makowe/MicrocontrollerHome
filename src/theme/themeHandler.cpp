@@ -3,8 +3,8 @@
 //
 
 #include "themeHandler.h"
-#include <theme/instances/themePlain.h>
-#include <theme/instances/themeRainbow.h>
+#include "theme/instances/themePlain.h"
+#include "theme/instances/themeRainbow.h"
 
 ThemeRainbow themeRainbow = ThemeRainbow(RAINBOW_DEFAULT_SPEED, RAINBOW_DEFAULT_COMPRESS);
 ThemePlain themePlain = ThemePlain();

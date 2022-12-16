@@ -2,39 +2,41 @@
 // Created by nicom on 04.11.2022.
 //
 
+#include <Arduino.h>
+
 #include "remote.h"
 #include "brightness.h"
-#include "constants.h"
-#include <Arduino.h>
-#include <filter/filterHandler.h>
-#include <ledInterface.h>
-#include <theme/themeHandler.h>
+#include "filter/filterHandler.h"
+#include "ledInterface.h"
+#include "theme/themeHandler.h"
 
-void buttonClicked(uint16_t button) {
+void processButtonClick(uint16_t button) {
     switch (button) {
         case IR_BUTTON_UP:
-            changeBrightness(true);
+            changeBrightness(BRIGHTNESS_INCREASE);
             break;
         case IR_BUTTON_DOWN:
-            changeBrightness(false);
+            changeBrightness(BRIGHTNESS_DECREASE);
             break;
         case IR_BUTTON_OK:
-#if DEBUG_REMOTE
-            Serial.println("[REMOTE]: Switch LedMode to running.");
-#endif
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch LedMode to running.");
             LedMode = LED_MODE_RUNNING;
             break;
         case IR_BUTTON_RIGHT:
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to next subtheme.");
             currentTheme->nextSubTheme();
             break;
         case IR_BUTTON_LEFT:
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to previous subtheme.");
             currentTheme->previousSubTheme();
             break;
         case IR_BUTTON_STAR:
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to next theme.");
             selectNextTheme();
             Serial.println("[REMOTE]: Select next Theme");
             break;
         case IR_BUTTON_HASH:
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to next filter.");
             selectNextFilter();
             Serial.println("[REMOTE]: Select next Filter");
             break;
@@ -42,9 +44,6 @@ void buttonClicked(uint16_t button) {
             break;
     }
 }
-
-
-#if DEBUG_REMOTE
 
 void print_detected_button(uint16_t button, bool repetition) {
     Serial.print("[REMOTE]: Value ");
@@ -60,5 +59,3 @@ void print_detected_button(uint16_t button, bool repetition) {
     }
     Serial.println(", No valid button detected");
 }
-
-#endif

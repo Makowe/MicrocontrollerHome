@@ -3,6 +3,8 @@
 //
 
 #include "filterNothing.h"
+
+
 Color FilterNothing::applyFilter(unsigned int pixel_idx, Color color) {
     return color;
 }

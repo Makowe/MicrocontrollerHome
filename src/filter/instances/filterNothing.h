@@ -5,8 +5,9 @@
 #ifndef TEST3_FILTERNOTHING_H
 #define TEST3_FILTERNOTHING_H
 
-
 #include "filter/filter.h"
+
+
 class FilterNothing : public Filter {
 
 public:

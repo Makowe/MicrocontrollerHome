@@ -5,19 +5,18 @@
 #ifndef TEST3_FILTERPULSATE_H
 #define TEST3_FILTERPULSATE_H
 
+#include "filter/filter.h"
+#include "model/color.h"
+#include "constants.h"
+
 // pulsating
 #define PULSATE_LENGTH 25
 #define PULSATE_MAX 255
 #define PULSATE_MIN 64
 
 #define PULSATE_DEFAULT_SPEED 1
-
-
-#include <filter/filter.h>
-#include <model/color.h>
-#include "constants.h"
-
 #define PULSATE_ARRAY_SIZE (NUM_PIXELS/PULSATE_LENGTH + 3)
+
 
 class FilterPulsate : public Filter {
 public:

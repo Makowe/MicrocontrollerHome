@@ -7,6 +7,7 @@
 
 #include "filter.h"
 
+
 extern Filter* currentFilter;
 
 void initFilters();

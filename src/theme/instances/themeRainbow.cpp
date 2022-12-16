@@ -1,8 +1,9 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-redundant-declaration"
 //
 // Created by nicom on 14.07.2021.
 //
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-redundant-declaration"
 
 #include "themeRainbow.h"
 

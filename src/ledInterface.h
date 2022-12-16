@@ -7,9 +7,10 @@
 #define TEST3_LEDINTERFACE_H
 
 #include <stdint.h>
+#include <Adafruit_NeoPixel.h>
+
 #include "constants.h"
 #include "model/color.h"
-#include <Adafruit_NeoPixel.h>
 
 #define LED_MODE_RUNNING 0
 #define LED_MODE_EDIT 1

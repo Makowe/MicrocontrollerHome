@@ -5,7 +5,8 @@
 #ifndef TEST3_FILTER_H
 #define TEST3_FILTER_H
 
-#include <model/color.h>
+#include "model/color.h"
+
 
 class Filter {
 public:

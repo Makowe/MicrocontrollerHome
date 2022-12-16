@@ -3,7 +3,7 @@
   <component name="Arduino Project Settings">
     <option name="buildConfigurationNames" value="" />
     <option name="buildConfigurationPatternType" value="0" />
-    <option name="port" value="COM6" />
+    <option name="port" value="COM5" />
     <option name="serialEndOfLine" value="0" />
     <option name="showSendOptions" value="false" />
   </component>

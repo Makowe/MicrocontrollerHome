@@ -3,6 +3,8 @@
 //
 
 #include "themePlain.h"
+
+
 Color ThemePlain::calcTheme(unsigned int pixel_idx) {
     return _subThemeColors[_currentSubTheme];
 }

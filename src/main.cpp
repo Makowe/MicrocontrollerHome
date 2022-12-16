@@ -1,21 +1,22 @@
+
+#include <Arduino.h>
+#include "../lib/Arduino-IRremote-3.9.0/src/IRremote.h"
+
 #include "constants.h"
 #include "debug.h"
 #include "ledInterface.h"
 #include "options/remote.h"
-#include "theme/instances/themeRainbow.h"
-#include <Arduino.h>
-#include <filter/filterHandler.h>
-#include <filter/instances/filterPulsate.h>
-#include <theme/themeHandler.h>
+#include "filter/filterHandler.h"
+#include "theme/themeHandler.h"
 
+/* define before including the TimerInterrupt */
 #define USE_TIMER_1     true
 #define USE_TIMER_2     false
 #define USE_TIMER_3     false
 #define USE_TIMER_4     false
 #define USE_TIMER_5     false
-#define TIMER1_INTERVAL_MS 100
+#define TIMER1_INTERVAL_MS 1000
 
-#include "../lib/Arduino-IRremote-3.9.0/src/IRremote.h"
 #include "../lib/TimerInterrupt-1.8.0/src/TimerInterrupt.h"
 
 #define DECODE_NEC
@@ -26,21 +27,29 @@
 
 LedInterface led;
 unsigned int timeSinceLastButtonProcess = 0;
+bool blockLeds = false;
 
 IRrecv irrecv(IR_INPUT_PIN);
 decode_results results;
-unsigned int IRButtonHold = 0;
 
 bool discardNextIrSignal = true;
 
+//
+// Interrupt Service Routines
+//
+
 void TimerHandler1() {
+    PRINT_DEBUG_MSG(DEBUG_LEDS, "[MAIN]: Timer Interrupt");
     timeSinceLastButtonProcess++;
+    blockLeds = false;
 }
 
+//
+// Functions
+//
+
 void updateLeds() {
-#if DEBUG_LEDS
-    Serial.println("[LEDS]: Update LEDs");
-#endif
+    PRINT_DEBUG_MSG(DEBUG_LEDS, "[LEDS]: Update LEDs");
 
     currentTheme->nextTick();
     currentFilter->nextTick();
@@ -52,13 +61,15 @@ void updateLeds() {
     }
 }
 
+//
+// Arduino Entry Points
+//
+
 void setup() {
 
     Serial.begin(9600);
 
-#if DEBUG_MAIN
-    Serial.println("[MAIN]: Setup");
-#endif
+    PRINT_DEBUG_MSG(DEBUG_MAIN, "[Main]: Setup");
 
     pinMode(IR_INPUT_PIN, INPUT);
 
@@ -66,6 +77,8 @@ void setup() {
     pinMode(IR_HIGH_PIN, OUTPUT);
     digitalWrite(IR_LOW_PIN, LOW);
     digitalWrite(IR_HIGH_PIN, HIGH);
+
+    pinMode(0, INPUT);
 
     irrecv.enableIRIn();
 
@@ -79,49 +92,43 @@ void setup() {
 void loop() {
 
     bool newSignal = irrecv.decode();
-    if (newSignal)
-    {
-        if(timeSinceLastButtonProcess < IR_BLOCK_DELAY_AFTER_EDIT) {
-            /* The IR is blocked because the user just switched from editing to running mode. */
-        }
-        else if(discardNextIrSignal) {
+    if (LedMode == LED_MODE_EDIT && newSignal) {
+        /* A new signal has been decoded. It can either by caused by pressing a new button or holding an already processed button. */
+
+        if(discardNextIrSignal) {
             /* The button signal is ignore because it was just used to switch into editor mode. */
+
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[Remote]: Button signal is ignored because it was only used to switch to editor mode");
             discardNextIrSignal = false;
         }
-        else if(timeSinceLastButtonProcess < IR_BUTTON_HOLD_DELAY) {
-            /* The button has already been processed. It needs to be held for a longer time to be processed again. */
-#if DEBUG_REMOTE
-            print_detected_button(irrecv.decodedIRData.command, true);
-#endif
+        else if(irrecv.decodedIRData.flags && timeSinceLastButtonProcess < IR_BUTTON_HOLD_DELAY) {
+            /* The button has already been processed but it is not held long enough to be processed again. */
+            RUN_DEBUG_FUNCTION(DEBUG_REMOTE, print_detected_button(irrecv.decodedIRData.command, true));
         }
-        else if(irrecv.decodedIRData.flags == 0 || timeSinceLastButtonProcess == IR_BUTTON_HOLD_DELAY) {
-            /* The signal is either new or the button is held for a certain time and therefore processed again. */
-#if DEBUG_REMOTE
-            print_detected_button(irrecv.decodedIRData.command);
-#endif
-            if(discardNextIrSignal) {
-                discardNextIrSignal = false;
-            }
-            else {
-                buttonClicked(irrecv.decodedIRData.command);
-                updateLeds();
-                led.show();
-                timeSinceLastButtonProcess = 0;
-            }
+        else {
+            /* The signal is either new or the button is held long enough to be processed again. */
+            RUN_DEBUG_FUNCTION(DEBUG_REMOTE, print_detected_button(irrecv.decodedIRData.command));
+            processButtonClick(irrecv.decodedIRData.command);
+
+            /* update LEDs once to show user what the new setting looks like */
+            updateLeds();
+            led.show();
+            timeSinceLastButtonProcess = 0;
         }
         irrecv.resume();
     }
 
     if(LedMode == LED_MODE_RUNNING && timeSinceLastButtonProcess >= IR_BLOCK_DELAY_AFTER_EDIT && !digitalRead(IR_INPUT_PIN)) {
-#if DEBUG_REMOTE
-        Serial.println("[REMOTE]: Switch to Editor Mode");
-#endif
+        /* In running mode while the LED is not blocked, an IR signal has been detected. */
+        PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to Editor Mode", NEW_LINE_AFTER);
         LedMode = LED_MODE_EDIT;
     }
 
-    if(LedMode == LED_MODE_RUNNING) {
+    if(LedMode == LED_MODE_RUNNING && !blockLeds) {
+        /* In running mode, regularly update LEDs */
         discardNextIrSignal = true;
         updateLeds();
         led.show();
+        blockLeds = true;
     }
 }
