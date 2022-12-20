@@ -1,13 +1,6 @@
 
 #include <Arduino.h>
-#include "../lib/Arduino-IRremote-3.9.0/src/IRremote.h"
-
-#include "constants.h"
-#include "debug.h"
-#include "ledInterface.h"
-#include "options/remote.h"
-#include "filter/filterHandler.h"
-#include "theme/themeHandler.h"
+#include <IRremote.h>
 
 /* define before including the TimerInterrupt */
 #define USE_TIMER_1     true
@@ -17,7 +10,16 @@
 #define USE_TIMER_5     false
 #define TIMER1_INTERVAL_MS 1000
 
-#include "../lib/TimerInterrupt-1.8.0/src/TimerInterrupt.h"
+#include <TimerInterrupt.h>
+
+#include "constants.h"
+#include "debug.h"
+#include "ledInterface.h"
+#include "options/remote.h"
+#include "filter/filterHandler.h"
+#include "theme/themeHandler.h"
+
+
 
 #define DECODE_NEC
 
