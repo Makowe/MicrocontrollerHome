@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/options/remote.h src/options/remote.cpp src/options/brightness.cpp src/options/brightness.h src/debug.h src/filter/instances/filterNothing.cpp src/filter/instances/filterNothing.h src/filter/filterHandler.cpp src/filter/filterHandler.h src/theme/themeHandler.cpp src/theme/themeHandler.h src/theme/instances/themePlain.cpp src/theme/instances/themePlain.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/options/remote.h src/options/remote.cpp src/options/brightness.cpp src/options/brightness.h src/debug.h src/filter/instances/filterNothing.cpp src/filter/instances/filterNothing.h src/filter/filterHandler.cpp src/filter/filterHandler.h src/theme/themeHandler.cpp src/theme/themeHandler.h src/theme/instances/themePlain.cpp src/theme/instances/themePlain.h test/testColor.cpp test/testThemePlain.cpp test/setup.cpp)

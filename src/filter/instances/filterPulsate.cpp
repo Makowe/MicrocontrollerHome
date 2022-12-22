@@ -13,7 +13,7 @@ Color FilterPulsate::applyFilter(unsigned int pixel_idx, Color color) {
 
     unsigned int brightness = interpolate(section, positionInSection);
 
-    return color.ModifyBrightness(brightness, PULSATE_MAX);
+    return color.modifyBrightness(brightness, PULSATE_MAX);
 }
 
 unsigned int FilterPulsate::interpolate(unsigned int section, unsigned int positionInSection) {
