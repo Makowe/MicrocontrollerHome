@@ -8,7 +8,7 @@
 #define USE_TIMER_3     false
 #define USE_TIMER_4     false
 #define USE_TIMER_5     false
-#define TIMER1_INTERVAL_MS 1000
+#define TIMER1_INTERVAL_MS 100
 
 #include <TimerInterrupt.h>
 
