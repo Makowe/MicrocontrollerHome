@@ -110,12 +110,14 @@ void loop() {
         else {
             /* The signal is either new or the button is held long enough to be processed again. */
             RUN_DEBUG_FUNCTION(DEBUG_REMOTE, print_detected_button(irrecv.decodedIRData.command));
-            processButtonClick(irrecv.decodedIRData.command);
+            bool validButton = processButtonClick(irrecv.decodedIRData.command);
 
             /* update LEDs once to show user what the new setting looks like */
-            updateLeds();
-            led.show();
-            timeSinceLastButtonProcess = 0;
+            if(validButton) {
+                updateLeds();
+                led.show();
+                timeSinceLastButtonProcess = 0;
+            }
         }
         irrecv.resume();
     }

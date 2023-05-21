@@ -10,7 +10,8 @@
 #include "ledInterface.h"
 #include "theme/themeHandler.h"
 
-void processButtonClick(uint16_t button) {
+bool processButtonClick(uint16_t button) {
+    bool validButton = true;
     switch (button) {
         case IR_BUTTON_UP:
             changeBrightness(BRIGHTNESS_INCREASE);
@@ -41,8 +42,10 @@ void processButtonClick(uint16_t button) {
             Serial.println("[REMOTE]: Select next Filter");
             break;
         default:
+            validButton = false;
             break;
     }
+    return validButton;
 }
 
 void print_detected_button(uint16_t button, bool repetition) {

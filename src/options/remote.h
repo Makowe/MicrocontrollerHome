@@ -75,7 +75,7 @@ constexpr ButtonToName buttonNames[] {
 };
 
 
-void processButtonClick(uint16_t button);
+bool processButtonClick(uint16_t button);
 
 void print_detected_button(uint16_t button, bool repetition = false);
 
