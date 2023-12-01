@@ -7,7 +7,7 @@
 #include "options/brightness.h"
 
 
-uint8_t LedMode = LED_MODE_RUNNING;
+uint8_t ledMode = LED_MODE_RUNNING;
 
 LedInterface::LedInterface() {
     _pixels = Adafruit_NeoPixel(NUM_PIXELS, LED_OUT_PIN, NEO_GRB + NEO_KHZ800);
@@ -58,5 +58,6 @@ void LedInterface::clear() {
 }
 
 void LedInterface::show() {
+    PRINT_DEBUG_MSG(DEBUG_LEDS, "[LEDS]: Fire LED update");
     _pixels.show();
 }

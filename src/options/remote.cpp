@@ -20,8 +20,8 @@ bool processButtonClick(uint16_t button) {
             changeBrightness(BRIGHTNESS_DECREASE);
             break;
         case IR_BUTTON_OK:
-            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch LedMode to running.");
-            LedMode = LED_MODE_RUNNING;
+            PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch ledMode to running.");
+            ledMode = LED_MODE_RUNNING;
             break;
         case IR_BUTTON_RIGHT:
             PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to next subtheme.");

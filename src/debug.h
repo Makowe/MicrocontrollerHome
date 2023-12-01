@@ -10,15 +10,19 @@
 #define DEBUG_LEDS 1
 #define DEBUG_MAIN 1
 #define DEBUG_REMOTE 1
-#define DEBUG_FILTER 0
+#define DEBUG_FILTER 1
 
-#define NEW_LINE_AFTER 1
-#define INLINE 0
+#define RUN_DEBUG_FUNCTION(channel, func) { if(channel) {func; } }
+#define PRINT_DEBUG_MSG(channel, msg) { if(channel) {printDebugMsg(msg); } }
 
-#define RUN_DEBUG_FUNCTION(channel, func) {if(channel) {func; } }
+inline void printDebugMsg(const String& msg) {
+    Serial.println(msg);
+}
 
-void PRINT_DEBUG_MSG(unsigned int channel, const String& msg, unsigned int new_line=1);
-void PRINT_DEBUG_MSG(unsigned int channel, int msg, unsigned int new_line=1);
+inline void printDebugMsg(int msg) {
+    Serial.println(msg);
+}
+
 
 
 #endif//TEST3_DEBUG_H

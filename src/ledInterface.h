@@ -15,7 +15,7 @@
 #define LED_MODE_RUNNING 0
 #define LED_MODE_EDIT 1
 
-extern uint8_t LedMode;
+extern uint8_t ledMode;
 
 /*
  * wrapper class for AdaFruit NeonPixel object with additional methods.

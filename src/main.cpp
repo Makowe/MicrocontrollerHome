@@ -8,7 +8,7 @@
 #define USE_TIMER_3     false
 #define USE_TIMER_4     false
 #define USE_TIMER_5     false
-#define TIMER1_INTERVAL_MS 100
+#define TIMER1_INTERVAL_MS 200
 
 #include <TimerInterrupt.h>
 
@@ -41,8 +41,9 @@ bool discardNextIrSignal = true;
 //
 
 void TimerHandler1() {
-    PRINT_DEBUG_MSG(DEBUG_LEDS, "[MAIN]: Timer Interrupt");
-    timeSinceLastButtonProcess++;
+    if(timeSinceLastButtonProcess < IR_BLOCK_DELAY_AFTER_EDIT) {
+        timeSinceLastButtonProcess++;
+    }
     blockLeds = false;
 }
 
@@ -82,7 +83,7 @@ void setup() {
 
     pinMode(0, INPUT);
 
-    irrecv.enableIRIn();
+    // irrecv.enableIRIn();
 
     ITimer1.init();
     ITimer1.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1);
@@ -94,7 +95,7 @@ void setup() {
 void loop() {
 
     bool newSignal = irrecv.decode();
-    if (LedMode == LED_MODE_EDIT && newSignal) {
+    if (ledMode == LED_MODE_EDIT && newSignal) {
         /* A new signal has been decoded. It can either by caused by pressing a new button or holding an already processed button. */
 
         if(discardNextIrSignal) {
@@ -119,17 +120,20 @@ void loop() {
                 timeSinceLastButtonProcess = 0;
             }
         }
-        irrecv.resume();
+        // irrecv.resume();
     }
 
-    if(LedMode == LED_MODE_RUNNING && timeSinceLastButtonProcess >= IR_BLOCK_DELAY_AFTER_EDIT && !digitalRead(IR_INPUT_PIN)) {
-        /* In running mode while the LED is not blocked, an IR signal has been detected. */
-        PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to Editor Mode", NEW_LINE_AFTER);
-        LedMode = LED_MODE_EDIT;
-    }
+    if(ledMode == LED_MODE_RUNNING && timeSinceLastButtonProcess >= IR_BLOCK_DELAY_AFTER_EDIT && !digitalRead(IR_INPUT_PIN)) {
+        /* In running mode while the Remote is not blocked, an IR signal has been detected. */
+        PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Switch to Editor Mode");
+        ledMode = LED_MODE_EDIT;
+        // irrecv.enableIRIn();
 
-    if(LedMode == LED_MODE_RUNNING && !blockLeds) {
+    }
+    PRINT_DEBUG_MSG(DEBUG_REMOTE, "[REMOTE]: Main Function");
+    if(ledMode == LED_MODE_RUNNING && !blockLeds) {
         /* In running mode, regularly update LEDs */
+        // irrecv.disableIRIn();
         discardNextIrSignal = true;
         updateLeds();
         led.show();
