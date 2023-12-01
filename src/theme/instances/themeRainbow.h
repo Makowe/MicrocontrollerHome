@@ -5,6 +5,9 @@
 #ifndef TEST3_THEMERAINBOW_H
 #define TEST3_THEMERAINBOW_H
 
+#include "theme/theme.h"
+#include "model/color.h"
+
 //rainbow
 #define RAINBOW_WIDTH_FADE 128
 #define RAINBOW_WIDTH_SOLO (256 - RAINBOW_WIDTH_FADE)
@@ -16,8 +19,6 @@
 #define RAINBOW_DEFAULT_SPEED 2
 #define RAINBOW_DEFAULT_COMPRESS 4
 
-#include "theme/theme.h"
-#include <model/color.h>
 
 class ThemeRainbow : public Theme {
 public:

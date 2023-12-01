@@ -3,7 +3,8 @@
 //
 
 #include "filterPulsate.h"
-#include <new>
+#include "debug.h"
+
 
 Color FilterPulsate::applyFilter(unsigned int pixel_idx, Color color) {
     unsigned int positionOnFade = NUM_PIXELS-1 - pixel_idx + position;
@@ -12,7 +13,7 @@ Color FilterPulsate::applyFilter(unsigned int pixel_idx, Color color) {
 
     unsigned int brightness = interpolate(section, positionInSection);
 
-    return color.ModifyBrightness(brightness, PULSATE_MAX);
+    return color.modifyBrightness(brightness, PULSATE_MAX);
 }
 
 unsigned int FilterPulsate::interpolate(unsigned int section, unsigned int positionInSection) {
@@ -43,8 +44,7 @@ void FilterPulsate::calc_next_level() {
     unsigned int brighter = rand() % 2;
 
     if(brighter) {
-        // clear special cases when modulo operation would result in undefined behaviour
-        if(last_level == PULSATE_MAX) {new_level = PULSATE_MAX; }
+        if(last_level == PULSATE_MAX) { new_level = PULSATE_MAX; }
         else { new_level = (rand() % (PULSATE_MAX - last_level)) + last_level; }
     }
     else {
@@ -56,17 +56,21 @@ void FilterPulsate::calc_next_level() {
         levels[i] = levels[i+1];
     }
     levels[PULSATE_ARRAY_SIZE-1] = new_level;
-#if DEBUG_FILTER
-        Serial.print("[FILT PULS]:\t");
-        Serial.print(levels[0]);
-        Serial.print(' ');
-        Serial.print(levels[1]);
-        Serial.print(' ');
-        Serial.print(levels[2]);
-        Serial.print(' ');
-        Serial.print(levels[3]);
-        Serial.println(' ');
-#endif
+
+    RUN_DEBUG_FUNCTION(
+            DEBUG_FILTER,
+            {
+                Serial.print("[FILT PULS]:\t");
+                Serial.print(levels[0]);
+                Serial.print(' ');
+                Serial.print(levels[1]);
+                Serial.print(' ');
+                Serial.print(levels[2]);
+                Serial.print(' ');
+                Serial.print(levels[3]);
+                Serial.println(' ');
+            }
+    );
 }
 
 void FilterPulsate::init_levels() {

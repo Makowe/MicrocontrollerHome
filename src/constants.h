@@ -1,5 +1,3 @@
-//Pins
-
 #ifndef TEST3_CONSTANTS_H
 #define TEST3_CONSTANTS_H
 

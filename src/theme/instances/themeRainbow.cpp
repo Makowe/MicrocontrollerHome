@@ -1,8 +1,9 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-redundant-declaration"
 //
 // Created by nicom on 14.07.2021.
 //
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-redundant-declaration"
 
 #include "themeRainbow.h"
 
@@ -37,7 +38,7 @@ Color ThemeRainbow::getSectionColor(unsigned int section, unsigned int posInSect
                                               posInSection-RAINBOW_WIDTH_SOLO, RAINBOW_WIDTH_FADE);
         }
     }
-    return Color(result_color);
+    return Color(result_color[0], result_color[1], result_color[2]);
 }
 
 unsigned int ThemeRainbow::getBaseBefore(unsigned int color, unsigned int section) const {

@@ -8,11 +8,6 @@
 #include "debug.h"
 #include <stdint.h>
 
-#if DEBUG_REMOTE
-#include <Arduino.h>
-#endif
-
-
 
 #define IR_BUTTON_2 0x46
 #define IR_BUTTON_3 0x47
@@ -35,7 +30,6 @@
 #define IR_BUTTON_HOLD_DELAY 3
 #define IR_BLOCK_DELAY_AFTER_EDIT 5
 
-#if DEBUG_REMOTE
 
 #define IR_BUTTON_2_NAME "2"
 #define IR_BUTTON_3_NAME "3"
@@ -80,12 +74,9 @@ constexpr ButtonToName buttonNames[] {
         {IR_BUTTON_OK, IR_BUTTON_OK_NAME},
 };
 
-#endif
 
-void buttonClicked(uint16_t button);
+bool processButtonClick(uint16_t button);
 
-#if DEBUG_REMOTE
 void print_detected_button(uint16_t button, bool repetition = false);
-#endif
 
 #endif//TEST3_REMOTE_H

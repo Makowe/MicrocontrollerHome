@@ -3,8 +3,9 @@
 //
 
 #include "filterHandler.h"
-#include <filter/instances/filterNothing.h>
-#include <filter/instances/filterPulsate.h>
+#include "filter/instances/filterNothing.h"
+#include "filter/instances/filterPulsate.h"
+
 
 FilterPulsate filterPulsate = FilterPulsate(PULSATE_DEFAULT_SPEED);
 FilterNothing filterNothing = FilterNothing();
